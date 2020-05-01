@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 from tqdm import tqdm
+import sys
 
 """
 
@@ -103,6 +104,11 @@ old_pred = need
 
 #########################
 
+orig_stdout = sys.stdout
+f = open('out.txt', 'w')
+sys.stdout = f
+########################
+
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
@@ -133,18 +139,17 @@ print("Predicted Female acceptance rate is ",predicted_female_acceptance_rate)
 
 ##########################
 
-# random.seed(1)
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
+total = X[(X['applicant_sex'] == 1) | (X['applicant_sex'] == 2)].shape[0]
 X = X[X['applicant_sex'] == 1]
-noofmales = X.shape[0]
 need = accden.predict(X)
 X['applicant_sex'] = [2 for j in range(X.shape[0])]
-print("Ratio of males in the data =",X.shape[0]/noofmales)
+print("Ratio of males in the data =",X.shape[0]/total)
 monte = accden.predict(X)
 X['new_pred'] = monte
 X['original_sex'] = ori
@@ -179,11 +184,11 @@ ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
+total = X[(X['applicant_sex'] == 1) | (X['applicant_sex'] == 2)].shape[0]
 X = X[X['applicant_sex'] == 2]
-nooffemales = X.shape[0]
 need = accden.predict(X)
 X['applicant_sex'] = [1 for j in range(X.shape[0])]
-print("Ratio of females in the data =",X.shape[0]/nooffemales)
+print("Ratio of females in the data =",X.shape[0]/total)
 
 monte = accden.predict(X)
 X['new_pred'] = monte
@@ -209,8 +214,10 @@ no_change_prob = (no_change/X.shape[0])
 
 print("The probability of female_to_male_accept_prob = ",female_to_male_accept_prob)
 print("The probability of female_to_male_reject_prob = ",female_to_male_reject_prob)
-
+sys.stdout = orig_stdout
+f.close()
 ##########################
+"""
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
@@ -294,7 +301,7 @@ plt.title('female_to_male_reject_prob')
 # plt.show()
 plt.savefig('female_to_male_reject_prob.png')
 plt.show(block=True)
-
+"""
 
 # plt.hist(X['applicant_sex'])
 # sns.catplot(x=[1,2,3,4], y=X.groupby("applicant_sex").count().accden, data=X)
