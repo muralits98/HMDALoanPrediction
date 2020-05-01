@@ -101,9 +101,27 @@ X = X.drop(columns = ['accden'])
 ori = X['applicant_sex']
 old_pred = need
 
+#########################
+
+filename = 'acceptance_denial_tuned.sav'
+accden = pickle.load(open(filename, 'rb'))
+ColName = 'action_taken'
+data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+X = data
+male_acceptance_rate = (X[(X['applicant_sex'] == 1) & (X['action_taken'] == 1)].shape[0])/(X[(X['applicant_sex'] == 1)].shape[0])
+female_acceptance_rate = (X[(X['applicant_sex'] == 2) & (X['action_taken'] == 1)].shape[0])/(X[(X['applicant_sex'] == 2)].shape[0])
+
+print("Male acceptance rate is ",male_acceptance_rate)
+print("Female acceptance rate is ",female_acceptance_rate)
 ##########################
 
 # random.seed(1)
+filename = 'acceptance_denial_tuned.sav'
+accden = pickle.load(open(filename, 'rb'))
+ColName = 'action_taken'
+data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+original = np.array(data[ColName])
+X = data.drop(columns = [ColName])
 X = X[X['applicant_sex'] == 1]
 need = accden.predict(X)
 X['applicant_sex'] = [2 for j in range(X.shape[0])]
@@ -173,7 +191,7 @@ print("The probability of female_to_male_accept_prob = ",female_to_male_accept_p
 print("The probability of female_to_male_reject_prob = ",female_to_male_reject_prob)
 
 ##########################
-"""
+
 female_to_male_accept_prob = []
 male_to_female_accept_prob = []
 male_to_female_reject_prob = []
@@ -253,7 +271,6 @@ plt.show(block=True)
 # sns.catplot(x=[1,2,3,4], y=X.groupby("applicant_sex").count().accden, data=X)
 # plt.show()
 
-"""
 
 # plt.hist(need)
 # plt.show()
