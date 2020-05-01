@@ -115,6 +115,24 @@ print("Male acceptance rate is ",male_acceptance_rate)
 print("Female acceptance rate is ",female_acceptance_rate)
 ##########################
 
+filename = 'acceptance_denial_tuned.sav'
+accden = pickle.load(open(filename, 'rb'))
+ColName = 'action_taken'
+data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+original = np.array(data[ColName])
+X = data.drop(columns = [ColName])
+need = accden.predict(X)
+X['accden'] = need
+X['action_taken'] = original
+
+predicted_male_acceptance_rate = (X[(X['applicant_sex'] == 1) & (X['accden'] == 1)].shape[0])/(X[(X['applicant_sex'] == 1)].shape[0])
+predicted_female_acceptance_rate = (X[(X['applicant_sex'] == 2) & (X['accden'] == 1)].shape[0])/(X[(X['applicant_sex'] == 2)].shape[0])
+
+print("Predicted Male acceptance rate is ",predicted_male_acceptance_rate)
+print("Predicted Female acceptance rate is ",predicted_female_acceptance_rate)
+
+##########################
+
 # random.seed(1)
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
@@ -191,7 +209,16 @@ print("The probability of female_to_male_accept_prob = ",female_to_male_accept_p
 print("The probability of female_to_male_reject_prob = ",female_to_male_reject_prob)
 
 ##########################
+filename = 'acceptance_denial_tuned.sav'
+accden = pickle.load(open(filename, 'rb'))
+ColName = 'action_taken'
+data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+original = np.array(data[ColName])
+X = data.drop(columns = [ColName])
+need = accden.predict(X)
 
+ori = X['applicant_sex']
+old_pred = need
 female_to_male_accept_prob = []
 male_to_female_accept_prob = []
 male_to_female_reject_prob = []
