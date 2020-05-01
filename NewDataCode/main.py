@@ -141,9 +141,10 @@ data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
 X = X[X['applicant_sex'] == 1]
+noofmales = X.shape[0]
 need = accden.predict(X)
 X['applicant_sex'] = [2 for j in range(X.shape[0])]
-print("Ratio of males in the data =",X.shape[0]/83323)
+print("Ratio of males in the data =",X.shape[0]/noofmales)
 monte = accden.predict(X)
 X['new_pred'] = monte
 X['original_sex'] = ori
@@ -179,9 +180,10 @@ data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
 X = X[X['applicant_sex'] == 2]
+nooffemales = X.shape[0]
 need = accden.predict(X)
 X['applicant_sex'] = [1 for j in range(X.shape[0])]
-print("Ratio of females in the data =",X.shape[0]/83323)
+print("Ratio of females in the data =",X.shape[0]/nooffemales)
 
 monte = accden.predict(X)
 X['new_pred'] = monte
@@ -224,7 +226,7 @@ male_to_female_accept_prob = []
 male_to_female_reject_prob = []
 female_to_male_reject_prob = []
 no_change_prob = []
-for i in tqdm(range(1,100)): #10257
+for i in tqdm(range(1,500)): #10257
     random.seed(i)
     X['applicant_sex'] = [random.choice([1,2,3,4]) for j in range(len(original))]
     monte = accden.predict(X)
