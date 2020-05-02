@@ -4,19 +4,19 @@
 ('Female acceptance rate is ', 0.5345009578169593)
 (100000, 19)
 (83323, 19)
-('Predicted Male acceptance rate is ', 0.6437868227502022)
-('Predicted Female acceptance rate is ', 0.5297314203057195)
+('Predicted Male acceptance rate is ', 0.6372405560475952)
+('Predicted Female acceptance rate is ', 0.5310997302474686)
 (100000, 19)
 (83323, 19)
 ('Ratio of males in the data =', 0.6700207696376279)
-824
-1394
-('The probability of male_to_female_accept_prob = ', 0.3715058611361587)
-('The probability of male_to_female_reject_prob = ', 0.6284941388638413)
+962
+1163
+('The probability of male_to_female_accept_prob = ', 0.4527058823529412)
+('The probability of male_to_female_reject_prob = ', 0.5472941176470588)
 (100000, 19)
 (83323, 19)
 ('Ratio of females in the data =', 0.32997923036237214)
-468
-550
-('The probability of female_to_male_accept_prob = ', 0.45972495088408644)
-('The probability of female_to_male_reject_prob = ', 0.5402750491159135)
+505
+595
+('The probability of female_to_male_accept_prob = ', 0.4590909090909091)
+('The probability of female_to_male_reject_prob = ', 0.5409090909090909)

@@ -51,7 +51,7 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
                 for j in range(2):
                     ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
             plt.show()
-            plt.savefig('logistic_model_tuned.png')
+            plt.savefig(str(name)+'logistic_model_tuned.png')
         elif model1 == 'xgb':
             print("\n XGBoost \n")
             model = XGBClassifier()

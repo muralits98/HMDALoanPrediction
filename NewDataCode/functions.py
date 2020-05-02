@@ -145,7 +145,7 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
                 for j in range(2):
                     ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
             plt.show()
-            plt.savefig('logistic_model_untuned.png')
+            plt.savefig(str(name)+'logistic_model_untuned.png')
             Acc = results.mean()*100
         # elif model1 == 'auto':
         #     print("\n Auto: \n")
