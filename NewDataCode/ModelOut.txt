@@ -1,0 +1,42 @@
+(100000, 19)
+(84157, 19)
+Building Plain baseline Models
+
+ Naive Bayes Classifier: 
+
+('Balanced Accuracy is ', 66.8417404254877)
+Cross Validation Balanced Accuracy: 66.50% (0.91%)
+
+ Random Forest: 
+
+('Balanced Accuracy is ', 67.56762242055538)
+Cross Validation Balanced Accuracy: 67.92% (0.99%)
+
+ XGBoost Classifier: 
+
+('Balanced Accuracy is ', 71.10862570481926)
+Cross Validation Balanced Accuracy: 71.21% (0.64%)
+('loan_type', 7.1749306)
+('property_type', 19.580006)
+('loan_purpose', 18.848204)
+('owner_occupancy', 1.3646346)
+('loan_amount_000s', 11.467659)
+('applicant_ethnicity', 4.1751328)
+('co_applicant_ethnicity', 3.1250608)
+('applicant_sex', 1.5926182)
+('co_applicant_sex', 1.2728817)
+('applicant_income_000s', 9.992237)
+('hoepa_status', 2.5873077)
+('lien_status', 7.7306085)
+('population', 1.42269)
+('minority_population', 5.257871)
+('hud_median_family_income', 1.2865987)
+('tract_to_msamd_income', 1.527113)
+
+ Logistic Classifier: 
+
+('Balanced Accuracy is ', 69.6364211405792)
+Cross Validation Balanced Accuracy: 69.12% (1.26%)
+
+ SVM: 
+

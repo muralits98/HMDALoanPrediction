@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import balanced_accuracy_score
 from tqdm import tqdm
-from IPython.display import Image
+# from IPython.display import Image
 from xgboost import plot_tree
 from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
@@ -124,8 +124,8 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             print("Cross Validation Balanced Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
             post_proc(X,model)
             Acc = results.mean()*100
-            plot_tree(model)
-            plt.savefig('xgb_model_untuned_tree.png')
+            # plot_tree(model)
+            # plt.savefig('xgb_model_untuned_tree.png')
         elif model1 == 'Logistic':
             print("\n Logistic Classifier: \n")
             model = LogisticRegression(solver = 'liblinear')
@@ -170,14 +170,14 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             results = cross_val_score(model, X_train, y_train, cv=cross,scoring = 'balanced_accuracy')
             print("Cross Validation Balanced Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
             Acc = results.mean()*100
-            export_graphviz(estimator_limited, 
-                out_file='random_forest_untuned_tree.dot', 
-                feature_names = X.columns,
-                class_names = y.columns,
-                rounded = True, proportion = False, 
-                precision = 2, filled = True)
-            call(['dot', '-Tpng', 'random_forest_untuned_tree.dot', '-o', 'random_forest_untuned_tree.png', '-Gdpi=600']
-            Image(filename = 'random_forest_untuned_tree.png')
+            # export_graphviz(model, 
+            #     out_file='random_forest_untuned_tree.dot', 
+            #     feature_names = X.columns,
+            #     class_names = 'action_taken',
+            #     rounded = True, proportion = False, 
+            #     precision = 2, filled = True)
+            # # call(['dot', '-Tpng', 'random_forest_untuned_tree.dot', '-o', 'random_forest_untuned_tree.png', '-Gdpi=600']
+            # Image(filename = 'random_forest_untuned_tree.png')
         elif model1 == 'nvb':
             print("\n Naive Bayes Classifier: \n")
             model = GaussianNB()
