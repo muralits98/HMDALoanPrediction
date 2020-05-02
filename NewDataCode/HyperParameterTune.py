@@ -15,6 +15,8 @@ import sklearn.metrics as skm
 import pickle
 from sklearn import svm
 import joblib
+from tqdm import tqdm
+
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
@@ -24,8 +26,9 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
     seed = 7
     test_size = 0.30
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
-    for model1 in models:
+    for model1 in tqdm(models):
         if model1 == 'Logistic':
+            print("logistic Regression \n")
             logistic = LogisticRegression()
             distributions = {
                 'C' : [1,2,3,4], 
@@ -33,11 +36,24 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             }
             clf = GridSearchCV(logistic, distributions,cv = 5)
             clf.fit(X_train, y_train)
-            # print(clf.best_params_)
-            # print(clf.cv_results_)
+            print(clf.best_params_)
+            print(clf.cv_results_)
             pred = clf.predict(X_test)
             print("The best Logistic Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
+            cm = confusion_matrix(y_test, pred)
+            fig, ax = plt.subplots(figsize=(8, 8))
+            ax.imshow(cm)
+            ax.grid(False)
+            ax.xaxis.set(ticks=(0, 1), ticklabels=('Predicted 0s', 'Predicted 1s'))
+            ax.yaxis.set(ticks=(0, 1), ticklabels=('Actual 0s', 'Actual 1s'))
+            ax.set_ylim(1.5, -0.5)
+            for i in range(2):
+                for j in range(2):
+                    ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
+            plt.show()
+            plt.savefig('logistic_model_tuned.png')
         elif model1 == 'xgb':
+            print("\n XGBoost \n")
             model = XGBClassifier()
             distributions = {
                 'booster' : ['gbtree','gblinear','dart'],
@@ -50,9 +66,12 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf = RandomizedSearchCV(model, distributions, random_state=0,cv = 5)
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
+            print(clf.best_params_)
+            print(clf.cv_results_)
             print("The best XGBoost Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'SVM':
+            print("\n SVM \n")
             model = svm.NuSVC(gamma='auto')
             distributions = {
                 'kernel' : ['linear','rbf','poly','sigmoid'],
@@ -61,9 +80,12 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5)
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
+            print(clf.best_params_)
+            print(clf.cv_results_)
             print("The best SVM Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'RandomForest':
+            print("\n Random Forest \n")
             model = RandomForestClassifier()
             distributions = {
                 'n_estimators' : [50,100,150,200,250,300],
@@ -75,6 +97,8 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5)
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
+            print(clf.best_params_)
+            print(clf.cv_results_)
             print("The best Random Forest Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         else:
@@ -84,7 +108,7 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             filename = str(name) + '.sav'
             pickle.dump(model1, open(filename, 'wb'))
             Acc_zero = Acc
-
+    print("Best picked model is", model1)
 
 
 # import sklearn.ensemble

@@ -10,8 +10,14 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import balanced_accuracy_score
+from tqdm import tqdm
+from IPython.display import Image
+from xgboost import plot_tree
 from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
+from sklearn.tree import export_graphviz
+
+from subprocess import call
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
@@ -25,6 +31,16 @@ import joblib
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.naive_bayes import GaussianNB
 
+def Exploratory_plots(data):
+    correlation = data.corr()
+    print(correlation)
+
+    for i in data.columns():
+        plt.hist(data[i])
+        plt.savefig(str(i)+'historgram.png')
+
+        plt.boxplot(data[i])
+        plt.savefig(str(i)+'boxplot.png')
 
 def get_data(drop1,nr = 10000,nona = 1,res = 0,year = 2017,sk = 0):
     if year == 2017:
@@ -65,26 +81,7 @@ def get_data(drop1,nr = 10000,nona = 1,res = 0,year = 2017,sk = 0):
     print(np.shape(data))
     if nona == 1:
         data = data.dropna()
-    # TODO: create a OneHotEncoder object, and fit it to all of X
 
-    # 1. INSTANTIATE
-    # enc = preprocessing.OneHotEncoder(categories='auto')
-
-    # 2. FIT
-    # enc.fit(data)
-
-    # 3. Transform
-    # enc_df = pd.DataFrame(enc.fit_transform(data[[i]]).toarray())
-    # data = data.join(enc_df)
-    # data = enc.transform(data)
-    # names = ['agency_abbr','agency_name','applicant_ethnicity_name','co_applicant_sex_name',
-    #          'co_applicant_ethnicity_name','preapproval_name','applicant_sex','county_name',
-    #          'hoepa_status_name','lien_status_name','loan_purpose_name','loan_type_name','owner_occupancy_name',
-    #          'property_type_name','purchaser_type_name','state_abbr']
-    # for i in names:
-    #     enc_df = pd.DataFrame(enc.fit_transform(data[[i]]).toarray())
-    #     data = data.join(enc_df)
-#     print(data.shape)
 #     mapping = dict(zip(data[drop1].unique(),[i for i in range(len(data[drop1].unique()))]))
 #     print(mapping)
 #     data = data.replace({ColName: mapping})
@@ -116,9 +113,9 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
     seed = 7
     test_size = 0.30
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
-    for model1 in models:
+    for model1 in tqdm(models):
         if model1 == 'xgb':
-            print("XGBoost Classifier: \n")
+            print("\n XGBoost Classifier: \n")
             model = XGBClassifier()
             model.fit(X_train,y_train)
             pred = model.predict(X_test)
@@ -127,6 +124,8 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             print("Cross Validation Balanced Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
             post_proc(X,model)
             Acc = results.mean()*100
+            plot_tree(model)
+            plt.savefig('xgb_model_untuned_tree.png')
         elif model1 == 'Logistic':
             print("\n Logistic Classifier: \n")
             model = LogisticRegression(solver = 'liblinear')
@@ -146,6 +145,7 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
                 for j in range(2):
                     ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
             plt.show()
+            plt.savefig('logistic_model_untuned.png')
             Acc = results.mean()*100
         # elif model1 == 'auto':
         #     print("\n Auto: \n")
@@ -170,6 +170,14 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             results = cross_val_score(model, X_train, y_train, cv=cross,scoring = 'balanced_accuracy')
             print("Cross Validation Balanced Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
             Acc = results.mean()*100
+            export_graphviz(estimator_limited, 
+                out_file='random_forest_untuned_tree.dot', 
+                feature_names = X.columns,
+                class_names = y.columns,
+                rounded = True, proportion = False, 
+                precision = 2, filled = True)
+            call(['dot', '-Tpng', 'random_forest_untuned_tree.dot', '-o', 'random_forest_untuned_tree.png', '-Gdpi=600']
+            Image(filename = 'random_forest_untuned_tree.png')
         elif model1 == 'nvb':
             print("\n Naive Bayes Classifier: \n")
             model = GaussianNB()
@@ -194,6 +202,7 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             filename = str(name) + '.sav'
             pickle.dump(model1, open(filename, 'wb'))
             Acc_zero = Acc
+    print("Best picked model is", model1)
 if __name__ == "__main__":
     ColName = 'action_taken_name'
     data,mapping = get_data(ColName,nr = 1000)

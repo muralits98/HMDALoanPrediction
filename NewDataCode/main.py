@@ -15,17 +15,24 @@ import sys
 Building model to predict the acceptance/denial
 
 """
-# ColName = 'action_taken'
-# data = get_data(ColName,nr = 100000)
-# s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-# s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-# d = pd.concat([s1,s2])
-# y = d[ColName]
-# X = d.drop(columns = [ColName])
-# # build_model(X,y,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic'])
 
-# # GuidedTuneModel(X,y)
-# tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+orig_stdout = sys.stdout
+f = open('ModelOut.txt', 'w')
+sys.stdout = f
+
+
+ColName = 'action_taken'
+data = get_data(ColName,nr = 100000)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]
+X = d.drop(columns = [ColName])
+print("Building Plain baseline Models")
+build_model(X,y,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+print("Building Tuned Models")
+# GuidedTuneModel(X,y)
+tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #########################################################################################################
 
@@ -35,17 +42,17 @@ Building model to predict the acceptance/denial
 Building model to predict the denial reason
 
 """
-# ColName = 'denial_reason_1'
-# data = get_data(ColName,nr = 100000,res = 1)
-# s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-# s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-# d = pd.concat([s1,s2])
-# y = d[ColName]  
-# X = d.drop(columns = [ColName])
-# # build_model(X,y,name = 'denial_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic'])
+ColName = 'denial_reason_1'
+data = get_data(ColName,nr = 100000,res = 1)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]  
+X = d.drop(columns = [ColName])
+build_model(X,y,name = 'denial_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 
-# # GuidedTuneModel(X,y)
-# tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+# GuidedTuneModel(X,y)
+tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #################################################################################################
 
@@ -75,7 +82,8 @@ Predict if acceptance/denial and filter that to predict denial reason
 # plt.show()
 
 #####################################################################################################
-
+sys.stdout = orig_stdout
+f.close()
 """
 
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
@@ -201,10 +209,6 @@ female_to_male_accept = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) &
 # male_to_female_reject = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1) & (X['new_pred'] == 3)].shape[0]
 female_to_male_reject = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) & (X['new_pred'] == 3) & (X['old_pred'] == 1)].shape[0]
 
-# total_female_to_male = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2)].shape[0]
-# total_male_to_female = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1)].shape[0]
-
-# no_change = X[(X['applicant_sex'] ==  X['original_sex'])].shape[0]
 print(female_to_male_accept)
 # print(male_to_female_accept)
 # print(male_to_female_reject)
@@ -242,10 +246,10 @@ for i in tqdm(range(1,500)): #10257
     X['new_pred'] = monte
     X['original_sex'] = ori
     X['old_pred'] = need
-    female_to_male_accept = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) & (X['new_pred'] == 1)].shape[0]
-    male_to_female_accept = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1) & (X['new_pred'] == 1)].shape[0]
-    male_to_female_reject = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1) & (X['new_pred'] == 3)].shape[0]
-    female_to_male_reject = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) & (X['new_pred'] == 3)].shape[0]
+    female_to_male_accept = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) & (X['new_pred'] == 1)& (X['old_pred'] == 3)].shape[0]
+    male_to_female_accept = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1) & (X['new_pred'] == 1)& (X['old_pred'] == 3)].shape[0]
+    male_to_female_reject = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1) & (X['new_pred'] == 3)& (X['old_pred'] == 1)].shape[0]
+    female_to_male_reject = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2) & (X['new_pred'] == 3)& (X['old_pred'] == 1)].shape[0]
 
     total_female_to_male = X[(X['applicant_sex'] == 1) & (X['original_sex'] == 2)].shape[0]
     total_male_to_female = X[(X['applicant_sex'] == 2) & (X['original_sex'] == 1)].shape[0]
