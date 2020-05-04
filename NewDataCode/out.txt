@@ -1,35 +1,59 @@
 (100000, 19)
-Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
        u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
        u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
        u'applicant_income_000s', u'hoepa_status', u'lien_status',
        u'population', u'minority_population', u'hud_median_family_income',
        u'tract_to_msamd_income', u'number_of_owner_occupied_units',
        u'number_of_1_to_4_family_units'],
-      dtype='object')
+      dtype='object'))
 (83323, 19)
 ('Male acceptance rate is ', 0.5810004235819631)
 ('Female acceptance rate is ', 0.5345009578169593)
 (100000, 19)
-Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
        u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
        u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
        u'applicant_income_000s', u'hoepa_status', u'lien_status',
        u'population', u'minority_population', u'hud_median_family_income',
        u'tract_to_msamd_income', u'number_of_owner_occupied_units',
        u'number_of_1_to_4_family_units'],
-      dtype='object')
+      dtype='object'))
 (83323, 19)
-('Predicted Male acceptance rate is ', 0.6424968231352767)
-('Predicted Female acceptance rate is ', 0.5262129090269362)
+('Predicted Male acceptance rate is ', 0.6623859216758443)
+('Predicted Female acceptance rate is ', 0.6208217678564447)
 (100000, 19)
-Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
        u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
        u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
        u'applicant_income_000s', u'hoepa_status', u'lien_status',
        u'population', u'minority_population', u'hud_median_family_income',
        u'tract_to_msamd_income', u'number_of_owner_occupied_units',
        u'number_of_1_to_4_family_units'],
-      dtype='object')
+      dtype='object'))
 (83323, 19)
 ('Ratio of males in the data =', 0.6700207696376279)
+49997
+0
+908
+1033
+0
+('The probability of male_to_female_accept_prob = ', 0.4678001030396703)
+('The probability of male_to_female_reject_prob = ', 0.5321998969603298)
+(100000, 19)
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+       u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
+       u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
+       u'applicant_income_000s', u'hoepa_status', u'lien_status',
+       u'population', u'minority_population', u'hud_median_family_income',
+       u'tract_to_msamd_income', u'number_of_owner_occupied_units',
+       u'number_of_1_to_4_family_units'],
+      dtype='object'))
+(83323, 19)
+('Ratio of females in the data =', 0.32997923036237214)
+540
+908
+1033
+439
+('The probability of female_to_male_accept_prob = ', 0.5515832482124617)
+('The probability of female_to_male_reject_prob = ', 0.4484167517875383)
