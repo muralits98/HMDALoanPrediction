@@ -20,8 +20,8 @@ Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
        u'number_of_1_to_4_family_units'],
       dtype='object')
 (83323, 19)
-('Predicted Male acceptance rate is ', 0.8765451114790712)
-('Predicted Female acceptance rate is ', 0.774541616169514)
+('Predicted Male acceptance rate is ', 0.6424968231352767)
+('Predicted Female acceptance rate is ', 0.5262129090269362)
 (100000, 19)
 Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
        u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',

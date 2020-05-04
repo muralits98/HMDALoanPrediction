@@ -88,7 +88,7 @@ def get_data(drop1,nr = 10000,nona = 1,res = 0,year = 2017,sk = 0):
     # for i in to_cat:
     #     data = pd.concat([data,pd.get_dummies(data[i])],axis=1)
     #     data.drop([i],axis=1, inplace=True)
-    print(data.columns)
+    print("The columns in the data are", data.columns)
     print(np.shape(data))
     return data
 
@@ -101,7 +101,8 @@ def post_proc(X,model):
         if val>1:
             print(ind,val)
 
-def build_model(X_train,y_train,X_test,y_test,name,cross = 5,models = ['xgb']):
+
+def build_model(X,y,name,cross = 5,models = ['xgb']):
     Acc_zero = 0
     """
     Need support for more models, along with cross validation and feature importances which can be easily taken out
@@ -112,9 +113,9 @@ def build_model(X_train,y_train,X_test,y_test,name,cross = 5,models = ['xgb']):
         if model == 'logistic'
             ...
     """
-    # seed = 7
-    # test_size = 0.30
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+    seed = 7
+    test_size = 0.30
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
     for model1 in tqdm(models):
         if model1 == 'xgb':
             print("\n XGBoost Classifier: \n")
