@@ -21,11 +21,11 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
 
-def tune_model(X_train,y_train,X_test,y_test,name,n_it = 30, models = ['xgb']):
+def tune_model(X,y,name,n_it = 30, models = ['xgb']):
     Acc_zero = 0
-    # seed = 7
-    # test_size = 0.30
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+    seed = 7
+    test_size = 0.30
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
     for model1 in tqdm(models):
         if model1 == 'Logistic':
             print("logistic Regression \n")
