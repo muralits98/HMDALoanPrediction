@@ -81,12 +81,12 @@ def get_data(drop1,nr = 10000,nona = 1,res = 0,year = 2017,sk = 0):
     print(np.shape(data))
     if nona == 1:
         data = data.dropna()
-
-#     mapping = dict(zip(data[drop1].unique(),[i for i in range(len(data[drop1].unique()))]))
-#     print(mapping)
-#     data = data.replace({ColName: mapping})
-#     for i in data.columns:
-#         data[i].astype(int)
+    # to_cat = ['owner_occupancy', 'co_applicant_ethnicity', 'loan_type', 'hoepa_status', 'applicant_ethnicity', 
+    #             'loan_purpose', 'lien_status', 'applicant_sex', 'co_applicant_sex', 'property_type', 'number_of_owner_occupied_units']
+    # for i in to_cat:
+    #     data = pd.concat([data,pd.get_dummies(data[i])],axis=1)
+    #     data.drop([i],axis=1, inplace=True)
+    print(data.columns)
     print(np.shape(data))
     return data
 

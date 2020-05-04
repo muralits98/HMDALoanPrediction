@@ -15,10 +15,10 @@ import sys
 Building model to predict the acceptance/denial
 
 """
-
-orig_stdout = sys.stdout
-f = open('ModelOut.txt', 'w')
-sys.stdout = f
+"""
+# orig_stdout = sys.stdout
+# f = open('ModelOut.txt', 'w')
+# sys.stdout = f
 
 
 ColName = 'action_taken'
@@ -39,7 +39,7 @@ tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomFore
 
 """
 
-Building model to predict the denial reason
+# Building model to predict the denial reason
 
 """
 ColName = 'denial_reason_1'
@@ -53,7 +53,7 @@ build_model(X,y,name = 'denial_reason_model',cross = 10,models = ['nvb','RandomF
 
 # GuidedTuneModel(X,y)
 tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
-
+"""
 #################################################################################################
 
 """
@@ -82,8 +82,8 @@ Predict if acceptance/denial and filter that to predict denial reason
 # plt.show()
 
 #####################################################################################################
-sys.stdout = orig_stdout
-f.close()
+# sys.stdout = orig_stdout
+# f.close()
 """
 
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
