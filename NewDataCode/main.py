@@ -38,7 +38,7 @@ print("\n \n Building Tuned Models \n \n")
 tune_model(X,y,name = 'Unbal_acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #########################################################################################################
-"""
+
 print("\n \n DENIAL_REASON_1 \n \n")
 
 """
@@ -62,15 +62,16 @@ build_model(X,y,name = 'Unbal_denial_reason_model',cross = 10,models = ['nvb','R
 print("\n \n Building Tuned Models \n \n")
 
 tune_model(X,y,name = 'Unbal_denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
-sys.exit()
+
 #################################################################################################
 
 """
-
+"""
 The above lines of code have been commented out because the models built have been saved.
 
 Predict if acceptance/denial and filter that to predict denial reason
 
+"""
 """
 
 
@@ -95,7 +96,7 @@ plt.savefig("Unbal_denial_reason_prediction_histogram.png")
 #####################################################################################################
 sys.stdout = orig_stdout
 f.close()
-
+"""
 """
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
 
