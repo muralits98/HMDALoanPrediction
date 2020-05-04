@@ -21,25 +21,25 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
 
-def tune_model(X,y,name,n_it = 30, models = ['xgb']):
+def tune_model(X_train,y_train,X_test,y_test,name,n_it = 30, models = ['xgb']):
     Acc_zero = 0
-    seed = 7
-    test_size = 0.30
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+    # seed = 7
+    # test_size = 0.30
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
     for model1 in tqdm(models):
         if model1 == 'Logistic':
             print("logistic Regression \n")
             logistic = LogisticRegression()
             distributions = {
-                'C' : [1,2,3,4], 
+                'C' : [1,2,3,4,5,6,7,8], 
                 'penalty': ['l1', 'l2']                                
             }
-            clf = GridSearchCV(logistic, distributions,cv = 5)
+            clf = RandomizedSearchCV(logistic, distributions,cv = 5)
             clf.fit(X_train, y_train)
             print(clf.best_params_)
-            print(clf.cv_results_)
             pred = clf.predict(X_test)
-            print("The best Logistic Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
+            print("Training Balanced Accuracy is ",balanced_accuracy_score(y_train,clf.predict(X_train))*100)
+            print("Testing Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             cm = confusion_matrix(y_test, pred)
             fig, ax = plt.subplots(figsize=(8, 8))
             ax.imshow(cm)
@@ -58,7 +58,7 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             distributions = {
                 'booster' : ['gbtree','gblinear','dart'],
                 'eta' : [0,0.2,0.4,0.6,0.8,1],
-                'max_depth' : [50,100,150,200,250,300],
+                'max_depth' : [5,10,15,20,50,100,150,200,250,300],
                 'lambda' : [0,0.2,0.4,0.6,0.8,1],
                 'alpha' : [0,0.2,0.4,0.6,0.8,1],
                 'grow_policy' : ['depthwise','lossguide']
@@ -67,8 +67,8 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
-            print(clf.cv_results_)
-            print("The best XGBoost Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
+            print("Training Balanced Accuracy is ",balanced_accuracy_score(y_train,clf.predict(X_train))*100)
+            print("Testing Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'SVM':
             print("\n SVM \n")
@@ -81,14 +81,14 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
-            print(clf.cv_results_)
-            print("The best SVM Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
+            print("Training Balanced Accuracy is ",balanced_accuracy_score(y_train,clf.predict(X_train))*100)
+            print("Testing Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'RandomForest':
             print("\n Random Forest \n")
             model = RandomForestClassifier()
             distributions = {
-                'n_estimators' : [50,100,150,200,250,300],
+                'n_estimators' : [5,10,15,50,75,100,150,200,250,300],
                 'criterion' : ['gini','entropy'],
                 'min_samples_split' : [2,3,4,5],
                 'min_samples_leaf' : [2,3,4,5],
@@ -98,8 +98,8 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
-            print(clf.cv_results_)
-            print("The best Random Forest Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
+            print("Training Balanced Accuracy is ",balanced_accuracy_score(y_train,clf.predict(X_train))*100)
+            print("Testing Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
             Acc = balanced_accuracy_score(y_test,pred)*100
         else:
             print(model1, "- Name not detected. Try using one of the models that are defined")

@@ -15,24 +15,30 @@ import sys
 Building model to predict the acceptance/denial
 
 """
-"""
-# orig_stdout = sys.stdout
-# f = open('ModelOut.txt', 'w')
-# sys.stdout = f
+
+orig_stdout = sys.stdout
+f = open('NewTestModelOut.txt', 'w')
+sys.stdout = f
 
 
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000)
-s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
 d = pd.concat([s1,s2])
-y = d[ColName]
-X = d.drop(columns = [ColName])
+# d = data
+y_train = d[ColName]
+X_train = d.drop(columns = [ColName])
+print(X_train.columns)
 print("Building Plain baseline Models")
-build_model(X,y,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+test_data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+X_test = test_data.drop(columns = [ColName])
+y_test = test_data[ColName]
+print(X_train.shape,y_train.shape,X_test.shape,y_test.shape)
+build_model(X_train,y_train,X_test,y_test,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 print("Building Tuned Models")
 # GuidedTuneModel(X,y)
-tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+tune_model(X_train,y_train,X_test,y_test,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #########################################################################################################
 
@@ -44,16 +50,22 @@ tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomFore
 """
 ColName = 'denial_reason_1'
 data = get_data(ColName,nr = 100000,res = 1)
-s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
 d = pd.concat([s1,s2])
-y = d[ColName]  
-X = d.drop(columns = [ColName])
-build_model(X,y,name = 'denial_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+y_train = d[ColName]
+X_train = d.drop(columns = [ColName])
+# test_data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+# X_test = test_data.drop(columns = [ColName])
+# y_test = test_data[ColName]
+
+print("Building Tuned Models")
+
+build_model(X_train,y_train,X_test,y_test,name = 'denial_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 
 # GuidedTuneModel(X,y)
-tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
-"""
+tune_model(X_train,y_train,X_test,y_test,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+
 #################################################################################################
 
 """
@@ -82,34 +94,34 @@ Predict if acceptance/denial and filter that to predict denial reason
 # plt.show()
 
 #####################################################################################################
-# sys.stdout = orig_stdout
-# f.close()
+sys.stdout = orig_stdout
+f.close()
 """
 
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
 
 """
 
-filename = 'acceptance_denial_tuned.sav'
-accden = pickle.load(open(filename, 'rb'))
-ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+# filename = 'acceptance_denial_tuned.sav'
+# accden = pickle.load(open(filename, 'rb'))
+# ColName = 'action_taken'
+# data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
 # data.to_csv('new_test_data.csv')
-original = np.array(data[ColName])
-X = data.drop(columns = [ColName])
-need = accden.predict(X)
-X['accden'] = need
-X1  = X[X['accden'] == 3]
-X1 = X1.drop(columns = ['accden'])
-filename = 'denial_reason_tuned.sav'
-denreason = pickle.load(open(filename, 'rb'))
-reason = denreason.predict(X1)
+# original = np.array(data[ColName])
+# X = data.drop(columns = [ColName])
+# need = accden.predict(X)
 # X['accden'] = need
-X = X.drop(columns = ['accden'])
-# print(np.sum(original == need))
-# print(np.sum(original == need) * (1/len(original)) ) #Accuracy is Roughly 52%
-ori = X['applicant_sex']
-old_pred = need
+# X1  = X[X['accden'] == 3]
+# X1 = X1.drop(columns = ['accden'])
+# filename = 'denial_reason_tuned.sav'
+# denreason = pickle.load(open(filename, 'rb'))
+# reason = denreason.predict(X1)
+# # X['accden'] = need
+# X = X.drop(columns = ['accden'])
+# # print(np.sum(original == need))
+# # print(np.sum(original == need) * (1/len(original)) ) #Accuracy is Roughly 52%
+# ori = X['applicant_sex']
+# old_pred = need
 
 #########################
 
