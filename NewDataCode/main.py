@@ -16,25 +16,25 @@ from MonteCarlo import MonteCarlo
 Building model to predict the acceptance/denial
 
 """
-"""
+
 orig_stdout = sys.stdout
-f = open('OriginalModelResults7030.txt', 'w')
+f = open('OriginalUnbalancedModelResults7030.txt', 'w')
 sys.stdout = f
 
 print("\n \n ACTION_TAKEN \n \n")
 
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000)
-s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
 d = pd.concat([s1,s2])
 y = d[ColName]
 X = d.drop(columns = [ColName])
 print("\n \n Building Plain baseline Models \n \n")
-build_model(X,y,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+build_model(X,y,name = 'Unbal_acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 print("\n \n Building Tuned Models \n \n")
 # GuidedTuneModel(X,y)
-tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+tune_model(X,y,name = 'Unbal_acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #########################################################################################################
 
@@ -47,32 +47,32 @@ print("\n \n DENIAL_REASON_1 \n \n")
 """
 ColName = 'denial_reason_1'
 data = get_data(ColName,nr = 100000,res = 1)
-s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
 d = pd.concat([s1,s2])
 y = d[ColName]
 X = d.drop(columns = [ColName])
 
 print("\n \n Building Plain baseline Models \n \n")
 
-build_model(X,y,name = 'acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+build_model(X,y,name = 'Unbal_acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 
 # GuidedTuneModel(X,y)
 print("\n \n Building Tuned Models \n \n")
 
-tune_model(X,y,name = 'acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+tune_model(X,y,name = 'Unbal_acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #################################################################################################
 
 """
-"""
+
 The above lines of code have been commented out because the models built have been saved.
 
 Predict if acceptance/denial and filter that to predict denial reason
-"""
+
 """
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000)
@@ -81,25 +81,25 @@ need = accden.predict(X)
 X['accden'] = need
 X  = X[X['accden'] == 3]
 X = X.drop(columns = ['accden'])
-filename = 'denial_reason_tuned.sav'
+filename = 'Unbal_denial_reason_tuned.sav'
 denreason = pickle.load(open(filename, 'rb'))
 reason = denreason.predict(X)
 
 plt.hist(need)
-plt.savefig("action_taken_prediction_histogram.png")
+plt.savefig("Unbal_action_taken_prediction_histogram.png")
 plt.hist(reason)
-plt.savefig("denial_reason_prediction_histogram.png")
+plt.savefig("Unbal_denial_reason_prediction_histogram.png")
 
 #####################################################################################################
 sys.stdout = orig_stdout
 f.close()
-"""
+
 """
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
 
 """
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
@@ -110,7 +110,7 @@ need = accden.predict(X)
 X['accden'] = need
 X1  = X[X['accden'] == 3]
 X1 = X1.drop(columns = ['accden'])
-filename = 'denial_reason_tuned.sav'
+filename = 'Unbal_denial_reason_tuned.sav'
 denreason = pickle.load(open(filename, 'rb'))
 reason = denreason.predict(X1)
 # X['accden'] = need
@@ -123,11 +123,11 @@ old_pred = need
 #########################
 
 orig_stdout = sys.stdout
-f = open('out.txt', 'w')
+f = open('Unbal_out.txt', 'w')
 sys.stdout = f
 ########################
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
@@ -140,7 +140,7 @@ print("Female acceptance rate is ",female_acceptance_rate)
 
 ##########################
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
@@ -158,7 +158,7 @@ print("Predicted Female acceptance rate is ",predicted_female_acceptance_rate)
 
 ##########################
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
@@ -199,7 +199,7 @@ print("The probability of male_to_female_reject_prob = ",male_to_female_reject_p
 
 ##########################
 
-filename = 'acceptance_denial_tuned.sav'
+filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
