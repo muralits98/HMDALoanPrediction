@@ -10,13 +10,14 @@ import random
 from tqdm import tqdm
 import sys
 from MonteCarlo import MonteCarlo
+import sys
 
 """
 
 Building model to predict the acceptance/denial
 
 """
-
+"""
 orig_stdout = sys.stdout
 f = open('OriginalUnbalancedModelResults7030.txt', 'w')
 sys.stdout = f
@@ -37,7 +38,7 @@ print("\n \n Building Tuned Models \n \n")
 tune_model(X,y,name = 'Unbal_acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 
 #########################################################################################################
-
+"""
 print("\n \n DENIAL_REASON_1 \n \n")
 
 """
@@ -55,13 +56,13 @@ X = d.drop(columns = [ColName])
 
 print("\n \n Building Plain baseline Models \n \n")
 
-build_model(X,y,name = 'Unbal_acceptance_denial_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
+build_model(X,y,name = 'Unbal_denial_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM'])
 
 # GuidedTuneModel(X,y)
 print("\n \n Building Tuned Models \n \n")
 
-tune_model(X,y,name = 'Unbal_acceptance_denial_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
-
+tune_model(X,y,name = 'Unbal_denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+sys.exit()
 #################################################################################################
 
 """
@@ -71,6 +72,7 @@ The above lines of code have been commented out because the models built have be
 Predict if acceptance/denial and filter that to predict denial reason
 
 """
+
 
 filename = 'Unbal_acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))

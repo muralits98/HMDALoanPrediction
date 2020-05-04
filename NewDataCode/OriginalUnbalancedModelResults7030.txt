@@ -1,0 +1,182 @@
+
+ 
+ ACTION_TAKEN 
+ 
+
+(100000, 19)
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+       u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
+       u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
+       u'applicant_income_000s', u'hoepa_status', u'lien_status',
+       u'population', u'minority_population', u'hud_median_family_income',
+       u'tract_to_msamd_income', u'number_of_owner_occupied_units',
+       u'number_of_1_to_4_family_units'],
+      dtype='object'))
+(84157, 19)
+
+ 
+ Building Plain baseline Models 
+ 
+
+
+ Naive Bayes Classifier: 
+
+('Training Balanced Accuracy is ', 66.18404878719197)
+('Testing Balanced Accuracy is ', 66.52805547842584)
+Cross Validation Balanced Accuracy: 66.13% (0.80%)
+
+ Random Forest: 
+
+('Training Balanced Accuracy is ', 96.26529425291032)
+('Testing Balanced Accuracy is ', 63.93202494395129)
+Cross Validation Balanced Accuracy: 63.65% (0.67%)
+
+ XGBoost Classifier: 
+
+('Training Balanced Accuracy is ', 65.82495527919721)
+('Testing Balanced Accuracy is ', 65.67071122756687)
+Cross Validation Balanced Accuracy: 65.27% (0.69%)
+('loan_type', 6.9859915)
+('property_type', 21.932394)
+('loan_purpose', 15.21741)
+('owner_occupancy', 1.219375)
+('loan_amount_000s', 11.080548)
+('applicant_ethnicity', 4.992788)
+('co_applicant_ethnicity', 1.8975785)
+('applicant_sex', 1.5909234)
+('co_applicant_sex', 1.60804)
+('applicant_income_000s', 12.840928)
+('hoepa_status', 2.592416)
+('lien_status', 5.7634645)
+('minority_population', 5.559779)
+('hud_median_family_income', 1.945034)
+('tract_to_msamd_income', 1.8900325)
+('number_of_1_to_4_family_units', 1.045839)
+
+ Logistic Classifier: 
+
+('Training Balanced Accuracy is ', 53.15010293831324)
+('Testing Balanced Accuracy is ', 53.42750366079847)
+Cross Validation Balanced Accuracy: 53.54% (0.29%)
+
+ SVM: 
+
+('Training Balanced Accuracy is ', 98.45939858097965)
+('Testing Balanced Accuracy is ', 52.56370880616542)
+Cross Validation Balanced Accuracy: 52.76% (0.38%)
+('Best picked model is', 'SVM')
+
+ 
+ Building Tuned Models 
+ 
+
+
+ Random Forest 
+
+{'n_estimators': 300, 'min_samples_split': 3, 'criterion': 'gini', 'max_features': 'sqrt', 'min_samples_leaf': 5}
+('Training Balanced Accuracy is ', 78.94356421293165)
+('Testing Balanced Accuracy is ', 66.53503150731937)
+
+ XGBoost 
+
+{'grow_policy': 'lossguide', 'eta': 0.8, 'alpha': 0.2, 'lambda': 0.6, 'max_depth': 15, 'booster': 'gbtree'}
+('Training Balanced Accuracy is ', 92.96614476270477)
+('Testing Balanced Accuracy is ', 66.63608692471506)
+logistic Regression 
+
+{'penalty': 'l1', 'C': 2}
+('Training Balanced Accuracy is ', 62.68139348027072)
+('Testing Balanced Accuracy is ', 62.97416080514529)
+('Best picked model is', 'Logistic')
+
+ 
+ DENIAL_REASON_1 
+ 
+
+(100000, 20)
+(8646, 19)
+
+ 
+ Building Plain baseline Models 
+ 
+
+
+ Naive Bayes Classifier: 
+
+('Training Balanced Accuracy is ', 61.71852980239441)
+('Testing Balanced Accuracy is ', 61.3973667554774)
+Cross Validation Balanced Accuracy: 61.40% (1.91%)
+
+ Random Forest: 
+
+('Training Balanced Accuracy is ', 98.65625833121567)
+('Testing Balanced Accuracy is ', 60.83655161697435)
+Cross Validation Balanced Accuracy: 60.66% (2.53%)
+
+ XGBoost Classifier: 
+
+('Training Balanced Accuracy is ', 68.85538933666795)
+('Testing Balanced Accuracy is ', 64.884672379357)
+Cross Validation Balanced Accuracy: 63.34% (1.84%)
+('loan_type', 6.571367)
+('property_type', 3.4173257)
+('loan_purpose', 4.325752)
+('owner_occupancy', 11.978558)
+('loan_amount_000s', 17.21672)
+('applicant_ethnicity', 4.5487304)
+('co_applicant_ethnicity', 4.2290883)
+('applicant_sex', 4.222077)
+('applicant_income_000s', 7.40033)
+('lien_status', 6.173005)
+('population', 4.230761)
+('minority_population', 4.818528)
+('hud_median_family_income', 5.9654093)
+('tract_to_msamd_income', 4.6489105)
+('number_of_owner_occupied_units', 5.503497)
+('number_of_1_to_4_family_units', 4.7499375)
+
+ Logistic Classifier: 
+
+('Training Balanced Accuracy is ', 60.738579495875)
+('Testing Balanced Accuracy is ', 59.75158892885162)
+Cross Validation Balanced Accuracy: 60.44% (1.88%)
+
+ SVM: 
+
+('Training Balanced Accuracy is ', 99.89043097151205)
+('Testing Balanced Accuracy is ', 50.68957806690746)
+Cross Validation Balanced Accuracy: 50.53% (0.85%)
+('Best picked model is', 'SVM')
+
+ 
+ Building Tuned Models 
+ 
+
+
+ Random Forest 
+
+{'n_estimators': 200, 'min_samples_split': 5, 'criterion': 'entropy', 'max_features': 'sqrt', 'min_samples_leaf': 4}
+('Training Balanced Accuracy is ', 90.22686214479336)
+('Testing Balanced Accuracy is ', 64.14411973152124)
+
+ XGBoost 
+
+{'grow_policy': 'depthwise', 'eta': 0.8, 'alpha': 0.8, 'lambda': 0, 'max_depth': 100, 'booster': 'gblinear'}
+('Training Balanced Accuracy is ', 60.696492231016784)
+('Testing Balanced Accuracy is ', 59.59288554027371)
+logistic Regression 
+
+{'penalty': 'l1', 'C': 7}
+('Training Balanced Accuracy is ', 61.96961465884874)
+('Testing Balanced Accuracy is ', 61.70387747908905)
+('Best picked model is', 'Logistic')
+(100000, 19)
+('The columns in the data are', Index([u'loan_type', u'property_type', u'loan_purpose', u'owner_occupancy',
+       u'loan_amount_000s', u'action_taken', u'applicant_ethnicity',
+       u'co_applicant_ethnicity', u'applicant_sex', u'co_applicant_sex',
+       u'applicant_income_000s', u'hoepa_status', u'lien_status',
+       u'population', u'minority_population', u'hud_median_family_income',
+       u'tract_to_msamd_income', u'number_of_owner_occupied_units',
+       u'number_of_1_to_4_family_units'],
+      dtype='object'))
+(84157, 19)
