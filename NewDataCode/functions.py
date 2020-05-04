@@ -17,7 +17,7 @@ from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
 from sklearn.tree import export_graphviz
 # from tpot import TPOTClassifier
-from pygam import LinearGAM, s, f
+from pygam import LogisticGAM, s, f
 
 from subprocess import call
 from sklearn.metrics import roc_auc_score
@@ -168,17 +168,18 @@ def build_model(X_train,y_train,X_test,y_test,name,cross = 5,models = ['xgb']):
             Acc = balanced_accuracy_score(y_test,pred)*100
         # elif model1 == 'gam':
         #     lams = np.random.rand(X_train.shape[0], X_train.shape[1]) # random points on [0, 1], with shape (100, 3)
-        #     lams = lams * 8 - 3 # shift values to -3, 3
+        #     lams = lams * 8 - 15 # shift values to -3, 3
         #     lams = np.exp(lams) # transforms values to 1e-3, 1e3
         #     X_train.to_numpy()
         #     y_train.to_numpy()
         #     X_test.to_numpy()
         #     y_test.to_numpy()
-        #     random_gam =  LinearGAM(f(0) + f(1) + f(2) + f(3) + s(4) + f(5) + f(6) + f(7) + f(8) + f(9) + f(10) + s(11) + f(12) + f(13) + f(14) + s(15)+ s(16)+ s(17)+ s(18)+ s(19)+ s(20))
-        #     LinearGAM(n_splines=10).gridsearch(X_train.values, y_train.values)
-        #     random_gam.gridsearch(X_train, y_train, lam=lams)
-        #     print(random_gam.summary())
-        #     pred = random_gam.predict(X_test)
+        #     random_gam =  LogisticGAM(f(0) + f(1) + f(2) + f(3) + s(4) + f(5) + f(6) + f(7) + f(8) + f(9) + f(10) + s(11) + f(12) + f(13) + f(14) + s(15)+ s(16)+ s(17))
+        #     # model = LogisticGAM(n_splines=20)
+        #     # model.gridsearch(X_train.values, y_train.values)
+        #     random_gam.gridsearch(X_train.values, y_train.values, lam=lams)
+        #     print(model.summary())
+        #     pred = model.predict(X_test)
         #     print("Balanced Accuracy is ",balanced_accuracy_score(y_test,pred)*100)
         #     Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'RandomForest':

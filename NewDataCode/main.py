@@ -17,14 +17,14 @@ Building model to predict the acceptance/denial
 """
 
 orig_stdout = sys.stdout
-f = open('NewTestModelOut.txt', 'w')
+f = open('WithBalancingNewTestModelOut.txt', 'w')
 sys.stdout = f
 
 
 ColName = 'action_taken'
 data = get_data(ColName,nr = 100000)
-s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
 d = pd.concat([s1,s2])
 # d = data
 y_train = d[ColName]
@@ -50,8 +50,11 @@ tune_model(X_train,y_train,X_test,y_test,name = 'acceptance_denial_tuned',n_it =
 """
 ColName = 'denial_reason_1'
 data = get_data(ColName,nr = 100000,res = 1)
-s1 = data[data[ColName] == 1]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3]#.sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+test_data = get_data(ColName,nr = 100000,year = 2017,sk = 100000,res=1)
+X_test = test_data.drop(columns = [ColName])
+y_test = test_data[ColName]
 d = pd.concat([s1,s2])
 y_train = d[ColName]
 X_train = d.drop(columns = [ColName])
