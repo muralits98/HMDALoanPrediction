@@ -1,6 +1,6 @@
 # Bias-Fairness-in-Home-Mortgage-Dataset
-## Proposal : https://docs.google.com/document/d/1uTxPZAaPZ_Cu9A00JuYolM9hJ7gBPeyA7TO48c0Tua0/edit?usp=sharing
 
+Proposal : https://docs.google.com/document/d/1uTxPZAaPZ_Cu9A00JuYolM9hJ7gBPeyA7TO48c0Tua0/edit?usp=sharing
 
 This is the project done as a part of Statistical Data Mining project.
 
