@@ -34,7 +34,7 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
                 'C' : [1,2,3,4,5,6,7,8], 
                 'penalty': ['l1', 'l2']                                
             }
-            clf = RandomizedSearchCV(logistic, distributions,cv = 5)
+            clf = RandomizedSearchCV(logistic, distributions,cv = 5,scoring = 'balanced_accuracy')
             clf.fit(X_train, y_train)
             print(clf.best_params_)
             pred = clf.predict(X_test)
@@ -52,18 +52,19 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
                     ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
             plt.show()
             plt.savefig(str(name)+'logistic_model_tuned.png')
+            Acc = balanced_accuracy_score(y_test,pred)*100
         elif model1 == 'xgb':
             print("\n XGBoost \n")
             model = XGBClassifier()
             distributions = {
                 'booster' : ['gbtree','gblinear','dart'],
                 'eta' : [0,0.2,0.4,0.6,0.8,1],
-                'max_depth' : [5,10,15,20,50,100,150,200,250,300],
+                'max_depth' : [number for number in range(1,30)],
                 'lambda' : [0,0.2,0.4,0.6,0.8,1],
                 'alpha' : [0,0.2,0.4,0.6,0.8,1],
                 'grow_policy' : ['depthwise','lossguide']
             }
-            clf = RandomizedSearchCV(model, distributions, random_state=0,cv = 5)
+            clf = RandomizedSearchCV(model, distributions, random_state=0,cv = 5,scoring = 'balanced_accuracy')
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
@@ -77,7 +78,7 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
                 'kernel' : ['linear','rbf','poly','sigmoid'],
                 'degree' : [4,5,6,7,8,9,10]
             }
-            clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5)
+            clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5,scoring = 'balanced_accuracy')
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
@@ -88,13 +89,13 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
             print("\n Random Forest \n")
             model = RandomForestClassifier()
             distributions = {
-                'n_estimators' : [5,10,15,50,75,100,150,200,250,300],
+                'n_estimators' : [number for number in range(1,50)],
                 'criterion' : ['gini','entropy'],
                 'min_samples_split' : [2,3,4,5],
                 'min_samples_leaf' : [2,3,4,5],
                 'max_features' : ['auto','sqrt','log2']
             }
-            clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5)
+            clf = RandomizedSearchCV(model, distributions, random_state=0,n_iter = n_it,cv = 5,scoring = 'balanced_accuracy')
             clf.fit(X_train, y_train)
             pred = clf.predict(X_test)
             print(clf.best_params_)
@@ -104,41 +105,40 @@ def tune_model(X,y,name,n_it = 30, models = ['xgb']):
         else:
             print(model1, "- Name not detected. Try using one of the models that are defined")
         if Acc > Acc_zero:
-            model1 = clf
             filename = str(name) + '.sav'
-            pickle.dump(model1, open(filename, 'wb'))
+            pickle.dump(clf, open(filename, 'wb'))
             Acc_zero = Acc
-    print("Best picked model is", model1)
+    print("Best picked model is ",filename)
 
 
-# import sklearn.ensemble
-# import sklearn.model_selection
-# import sklearn.svm
+import sklearn.ensemble
+import sklearn.model_selection
+import sklearn.svm
 
-# import optuna
-
-
-# # FYI: Objective functions can take additional arguments
-# # (https://optuna.readthedocs.io/en/stable/faq.html#objective-func-additional-args).
+import optuna
 
 
+# FYI: Objective functions can take additional arguments
+# (https://optuna.readthedocs.io/en/stable/faq.html#objective-func-additional-args).
 
-# def GuidedTuneModel(X,y):
-#     def objective(trial):
 
-#         classifier_name = trial.suggest_categorical("classifier", ["SVC", "RandomForest"])
-#         if classifier_name == "SVC":
-#             svc_c = trial.suggest_loguniform("svc_c", 1e-10, 1e10)
-#             classifier_obj = sklearn.svm.SVC(C=svc_c, gamma="auto")
-#         else:
-#             rf_max_depth = int(trial.suggest_loguniform("rf_max_depth", 2, 32))
-#             classifier_obj = sklearn.ensemble.RandomForestClassifier(
-#                 max_depth=rf_max_depth, n_estimators=10
-#             )
 
-#         score = sklearn.model_selection.cross_val_score(classifier_obj, X, y, n_jobs=-1, cv=3)
-#         accuracy = score.mean()
-#         return accuracy
-#     study = optuna.create_study(direction="maximize")
-#     study.optimize(objective, n_trials=100)
-#     print(study.best_trial)
+def GuidedTuneModel(X,y):
+    def objective(trial):
+
+        classifier_name = trial.suggest_categorical("classifier", ["SVC", "RandomForest"])
+        if classifier_name == "SVC":
+            svc_c = trial.suggest_loguniform("svc_c", 1e-10, 1e10)
+            classifier_obj = sklearn.svm.SVC(C=svc_c, gamma="auto")
+        else:
+            rf_max_depth = int(trial.suggest_loguniform("rf_max_depth", 2, 32))
+            classifier_obj = sklearn.ensemble.RandomForestClassifier(
+                max_depth=rf_max_depth, n_estimators=10
+            )
+
+        score = sklearn.model_selection.cross_val_score(classifier_obj, X, y, n_jobs=-1, cv=3)
+        accuracy = score.mean()
+        return accuracy
+    study = optuna.create_study(direction="maximize")
+    study.optimize(objective, n_trials=100)
+    print(study.best_trial)

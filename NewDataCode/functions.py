@@ -16,8 +16,8 @@ from xgboost import plot_tree
 from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
 from sklearn.tree import export_graphviz
-# from tpot import TPOTClassifier
-from pygam import LogisticGAM, s, f
+from tpot import TPOTClassifier
+# from pygam import LogisticGAM, s, f
 
 from subprocess import call
 from sklearn.metrics import roc_auc_score
@@ -51,9 +51,9 @@ def get_data(drop1,nr = 10000,nona = 1,res = 0,year = 2017,sk = 0):
         data = pd.read_csv(r"C:\Users\tsmur\Desktop\Spring2020\StatDataMining\Project\hmda_"+str(year)+"_nationwide_all-records_labels.csv", nrows = nr,skiprows=[i for i in range(1,sk)])
     else:
         print("Year not found")
-    data.replace(' ', None)
-    data.replace('', None)
-    data.replace('NA', None)
+    data = data.replace(' ', None)
+    data = data.replace('', None)
+    data = data.replace('NA', None)
     if res == 1:
         c = ['rate_spread','sequence_number','co_applicant_race_5','agency_code',
        'co_applicant_race_4', 'co_applicant_race_3','applicant_race_4','census_tract_number',
@@ -152,11 +152,15 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
             # plt.show()
             plt.savefig(str(name)+'logistic_model_untuned.png')
             Acc = balanced_accuracy_score(y_test,pred)*100
-        # elif model1 == 'auto':
-        #     print("\n Auto: \n")
-        #     tpot = TPOTClassifier(verbosity=2, scoring = 'balanced_accuracy')
-        #     tpot.fit(X_train, y_train)
-        #     print(tpot.score(X_test, y_test))
+        elif model1 == 'auto':
+            print("\n Automatic ML: \n")
+            model = TPOTClassifier(generations=10, population_size=30,verbosity=3, scoring = 'balanced_accuracy')
+            model.fit(X_train, y_train)
+            print(model.score(X_test, y_test))
+            print("Training Balanced Accuracy is ",model.score(X_train,y_train)*100)
+            print("Testing Balanced Accuracy is ",model.score(X_test,y_test)*100)
+            Acc = model.score(X_test, y_test) * 100
+            model.export(str(name) + '_auto.py')
         elif model1 == 'SVM':
             print("\n SVM: \n")
             model = svm.NuSVC(gamma='auto')
@@ -221,12 +225,14 @@ def build_model(X,y,name,cross = 5,models = ['xgb']):
         #     Acc = balanced_accuracy_score(y_test,pred)*100
         else:
             print(model1, "- Name not detected. Try using one of the models that are defined")
-        if Acc > Acc_zero:
-            model1 = model
-            filename = str(name) + '.sav'
-            pickle.dump(model1, open(filename, 'wb'))
-            Acc_zero = Acc
-    print("Best picked model is", model1)
+        try:
+            if Acc > Acc_zero:
+                filename = str(name) + '.sav'
+                pickle.dump(model, open(filename, 'wb'))
+                Acc_zero = Acc
+        except:
+            continue
+    print("Best picked model is", filename)
 if __name__ == "__main__":
     ColName = 'action_taken_name'
     data,mapping = get_data(ColName,nr = 1000)
