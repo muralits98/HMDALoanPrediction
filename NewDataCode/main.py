@@ -10,6 +10,7 @@ import random
 from tqdm import tqdm
 import sys
 from MonteCarlo import MonteCarlo
+from sklearn.model_selection import train_test_split
 
 """
 
@@ -39,30 +40,30 @@ Building model to predict the acceptance/denial
 
 #########################################################################################################
 
-print("\n \n DENIAL_REASON_1 \n \n")
+# print("\n \n DENIAL_REASON_1 \n \n")
 
-"""
+# """
 
-# Building model to predict the denial reason
+# # Building model to predict the denial reason
 
-"""
-ColName = 'denial_reason_1'
-data = get_data(ColName,nr = 100000,res = 1)
-s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
-d = pd.concat([s1,s2])
+# """
+# ColName = 'denial_reason_1'
+# data = get_data(ColName,nr = 100000,res = 1)
+# s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+# s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+# d = pd.concat([s1,s2])
 
-y = d[ColName]
-X = d.drop(columns = [ColName])
+# y = d[ColName]
+# X = d.drop(columns = [ColName])
 
-print("\n \n Building Plain baseline Models \n \n")
+# print("\n \n Building Plain baseline Models \n \n")
 
-build_model(X,y,name = 'deinal_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM','auto'])
+# build_model(X,y,name = 'deinal_reason_model',cross = 10,models = ['nvb','RandomForest','xgb','Logistic','SVM','auto'])
 
-GuidedTuneModel(X,y)
-print("\n \n Building Tuned Models \n \n")
+# GuidedTuneModel(X,y)
+# print("\n \n Building Tuned Models \n \n")
 
-tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
+# tune_model(X,y,name = 'denial_reason_tuned',n_it = 50, models = ['RandomForest','xgb','Logistic'])
 #################################################################################################
 
 """
@@ -94,8 +95,8 @@ plt.hist(reason)
 plt.savefig("denial_reason_prediction_histogram.png")
 # sys.exit()
 #####################################################################################################
-sys.stdout = orig_stdout
-f.close()
+# sys.stdout = orig_stdout
+# f.close()
 """
 
 Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
@@ -105,7 +106,7 @@ Studying Bias and Fairness in the data with the next 100000 datapoints in 2017
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+data = get_data(ColName,nr = 100000)
 # data.to_csv('new_test_data.csv')
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
@@ -125,15 +126,24 @@ old_pred = need
 
 #########################
 
-orig_stdout = sys.stdout
-f = open('out.txt', 'w')
-sys.stdout = f
+# orig_stdout = sys.stdout
+# f = open('out.txt', 'w')
+# sys.stdout = f
 ########################
 
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+data = get_data(ColName,nr = 100000)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]
+X = d.drop(columns = [ColName])
+seed = 7
+test_size = 0.30
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+data = X_test
 X = data
 male_acceptance_rate = (X[(X['applicant_sex'] == 1) & (X['action_taken'] == 1)].shape[0])/(X[(X['applicant_sex'] == 1)].shape[0])
 female_acceptance_rate = (X[(X['applicant_sex'] == 2) & (X['action_taken'] == 1)].shape[0])/(X[(X['applicant_sex'] == 2)].shape[0])
@@ -146,7 +156,16 @@ print("Female acceptance rate is ",female_acceptance_rate)
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+data = get_data(ColName,nr = 100000)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]
+X = d.drop(columns = [ColName])
+seed = 7
+test_size = 0.30
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+data = X_test
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
 need = accden.predict(X)
@@ -164,7 +183,16 @@ print("Predicted Female acceptance rate is ",predicted_female_acceptance_rate)
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+data = get_data(ColName,nr = 100000)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]
+X = d.drop(columns = [ColName])
+seed = 7
+test_size = 0.30
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+data = X_test
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
 total = X[(X['applicant_sex'] == 1) | (X['applicant_sex'] == 2)].shape[0]
@@ -205,7 +233,16 @@ print("The probability of male_to_female_reject_prob = ",male_to_female_reject_p
 filename = 'acceptance_denial_tuned.sav'
 accden = pickle.load(open(filename, 'rb'))
 ColName = 'action_taken'
-data = get_data(ColName,nr = 100000,year = 2017,sk = 100000)
+data = get_data(ColName,nr = 100000)
+s1 = data[data[ColName] == 1].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+s2 = data[data[ColName] == 3].sample(n = np.minimum(data[data[ColName] == 1].shape[0],data[data[ColName] == 3].shape[0]))
+d = pd.concat([s1,s2])
+y = d[ColName]
+X = d.drop(columns = [ColName])
+seed = 7
+test_size = 0.30
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+data = X_test
 original = np.array(data[ColName])
 X = data.drop(columns = [ColName])
 total = X[(X['applicant_sex'] == 1) | (X['applicant_sex'] == 2)].shape[0]
