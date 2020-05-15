@@ -1,8 +1,9 @@
 # Bias-Fairness-in-Home-Mortgage-Dataset
 
-Proposal : https://docs.google.com/document/d/1uTxPZAaPZ_Cu9A00JuYolM9hJ7gBPeyA7TO48c0Tua0/edit?usp=sharing
+Proposal : https://github.com/muralits98/HMDALoanPrediction/blob/master/StatisticalDataMiningProjectProposal.pdf
 
 Full Report: https://github.com/muralits98/HMDALoanPrediction/blob/master/Statistical_Data_Mining_Report-1.pdf
+
 This is the project done as a part of Statistical Data Mining project. There is also a dash website inside!
 
 https://www.consumerfinance.gov/data-research/hmda/historic-data/
